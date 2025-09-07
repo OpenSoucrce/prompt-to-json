@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prompt-to-json"
+version = "0.1.1"
+description = "Convert natural language prompts to structured JSON using OpenAI"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+  {name = "Aadarsh Gaikwad", email = "aadarshgaikwad04@example.com"}
+]
+license = {text = "MIT"}
+dependencies = [
+  "openai>=1.0.0",
+  "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-cov",
+  "pre-commit",
+  "mypy",
+  "ruff",
+  "black",
+]
+
+[project.urls]
+Homepage = "https://github.com/OpenSoucrce/prompt-to-json"
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+ignore_missing_imports = true
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = ["example"]
+ignore_errors = true
+
+[tool.pytest.ini_options]
+addopts = "-q --cov=prompt_to_json --cov-report=term-missing"

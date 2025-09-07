@@ -73,10 +73,10 @@ results = converter.convert_batch(prompts)
 ### Using Different Models
 
 ```python
-# Use GPT-4 for better accuracy
-converter = PromptToJSON(model="gpt-4")
+# Use GPT-4.1 for better accuracy (default)
+converter = PromptToJSON()
 
-# Use GPT-3.5 Turbo for speed and cost efficiency (default)
+# Use GPT-3.5 Turbo for speed and cost efficiency
 converter = PromptToJSON(model="gpt-3.5-turbo")
 ```
 
@@ -141,18 +141,11 @@ converter.client = OpenAI(api_key=converter.api_key, timeout=30)
 ### JSON Schema and Validation
 
 ```python
-from pydantic import BaseModel, ValidationError
-
-class PromptJSON(BaseModel):
-    task: str
-    input_data: dict
-    output_format: dict | None = None
-    constraints: dict | None = None
-    context: dict | None = None
-    config: dict | None = None
+from prompt_to_json import PromptJSON
 
 result = converter.convert("Extract key facts")
-PromptJSON.model_validate(result)
+PromptJSON.model_validate(result)  # raises if the shape is wrong
+schema = PromptJSON.to_schema()
 ```
 
 ### Custom Models and Prompts
