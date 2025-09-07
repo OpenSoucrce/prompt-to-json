@@ -1,4 +1,3 @@
-
 from .converter import PromptToJSON
 from .schema import PromptJSON
 
