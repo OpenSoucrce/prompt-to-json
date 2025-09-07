@@ -15,7 +15,7 @@ def main():
         "Analyze sales data from Q3 and identify top 3 trends",
         "Translate this document to French maintaining formal tone",
         "Create a step-by-step tutorial for beginners on how to use Python",
-        "Classify customer reviews into positive, negative, and neutral"
+        "Classify customer reviews into positive, negative, and neutral",
     ]
 
     print("Converting Natural Language Prompts to Structured JSON\n")
