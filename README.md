@@ -1,5 +1,11 @@
 # prompt-to-json
 
+[![PyPI version](https://img.shields.io/pypi/v/prompt-to-json)](https://pypi.org/project/prompt-to-json/)
+[![Build Status](https://github.com/prompt-to-json/prompt-to-json/actions/workflows/ci.yml/badge.svg)](https://github.com/prompt-to-json/prompt-to-json/actions/workflows/ci.yml)
+[![Coverage Status](https://img.shields.io/codecov/c/github/prompt-to-json/prompt-to-json)](https://codecov.io/gh/prompt-to-json/prompt-to-json)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python Versions](https://img.shields.io/pypi/pyversions/prompt-to-json.svg)](https://pypi.org/project/prompt-to-json/)
+
 Convert natural language prompts to structured JSON using OpenAI's GPT models.
 
 ## Installation
@@ -100,6 +106,72 @@ prompt = "Analyze customer feedback and identify top complaints"
 # Returns: {"task": "analyze", "input_data": {"type": "customer_feedback"}, ...}
 ```
 
+## Advanced Usage
+
+### Error Handling, Rate Limits, and Retries
+
+```python
+from prompt_to_json import PromptToJSON
+from openai import OpenAI, OpenAIError
+from time import sleep
+
+converter = PromptToJSON()
+
+for attempt in range(3):
+    try:
+        result = converter.convert("Summarize this article")
+        break
+    except OpenAIError as e:
+        # basic exponential backoff on failure or rate limit
+        sleep(2 ** attempt)
+else:
+    raise RuntimeError("Request failed after retries")
+
+print(result)
+```
+
+### Timeout Configuration
+
+```python
+converter = PromptToJSON()
+# underlying OpenAI client supports a timeout parameter
+converter.client = OpenAI(api_key=converter.api_key, timeout=30)
+```
+
+### JSON Schema and Validation
+
+```python
+from pydantic import BaseModel, ValidationError
+
+class PromptJSON(BaseModel):
+    task: str
+    input_data: dict
+    output_format: dict | None = None
+    constraints: dict | None = None
+    context: dict | None = None
+    config: dict | None = None
+
+result = converter.convert("Extract key facts")
+PromptJSON.model_validate(result)
+```
+
+### Custom Models and Prompts
+
+```python
+# Use a different model and a deterministic temperature
+converter = PromptToJSON(model="gpt-4o-mini")
+
+# Modify system instructions or add few-shot examples
+custom = PromptToJSON(model="gpt-4o-mini")
+custom_prompt = "You are a precise JSON formatter."
+response = custom.client.responses.create(
+    model=custom.model,
+    instructions=custom_prompt,
+    input="Translate to French",
+    temperature=0,
+)
+```
+
 ## Requirements
 
 - Python 3.6+
@@ -117,7 +189,11 @@ MIT
 
 ## Contributing
 
-Contributions welcome! Please open an issue or submit a PR.
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## Support
 
