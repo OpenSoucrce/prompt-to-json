@@ -11,7 +11,7 @@ setup(
     description="Convert natural language prompts to structured JSON using OpenAI",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/prompt-to-json",
+    url="https://github.com/OpenSoucrce/prompt-to-json",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
